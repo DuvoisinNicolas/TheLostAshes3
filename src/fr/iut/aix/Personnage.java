@@ -1,13 +1,16 @@
 package fr.iut.aix;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Personnage {
     private String name;
-    private int hp = 100;
-    private int force = 0;
-    private int dexterite = 0;
-    private int endurance = 0;
-    private int magie = 0;
-    private int charisme = 0;
+    private IntegerProperty hp = new SimpleIntegerProperty(100);
+    private IntegerProperty force =  new SimpleIntegerProperty(0);
+    private IntegerProperty dexterite =  new SimpleIntegerProperty(0);
+    private IntegerProperty endurance =  new SimpleIntegerProperty(0);
+    private IntegerProperty magie =  new SimpleIntegerProperty(0);
+    private IntegerProperty charisme = new SimpleIntegerProperty( 0);
     private Inventaire inventaire = new Inventaire();
 
     public Personnage(String name)
@@ -20,27 +23,27 @@ public class Personnage {
     }
 
     public void setCharisme(int charisme) {
-        this.charisme = charisme;
+        this.charisme.set(charisme);
     }
 
     public void setDexterite(int dexterite) {
-        this.dexterite = dexterite;
+        this.dexterite.set(dexterite);
     }
 
     public void setEndurance(int endurance) {
-        this.endurance = endurance;
+        this.endurance.set(endurance);
     }
 
     public void setForce(int force) {
-        this.force = force;
+        this.force.set(force);
     }
 
     public void setHp(int hp) {
-        this.hp = hp;
+        this.hp.set(hp);
     }
 
     public void setMagie(int magie) {
-        this.magie = magie;
+        this.magie.set(magie);
     }
 
     public String getName() {
@@ -48,26 +51,50 @@ public class Personnage {
     }
 
     public int getHp() {
-        return hp;
+        return hp.get();
     }
 
     public int getCharisme() {
-        return charisme;
+        return charisme.get();
     }
 
     public int getDexterite() {
-        return dexterite;
+        return dexterite.get();
     }
 
     public int getEndurance() {
-        return endurance;
+        return endurance.get();
     }
 
     public int getForce() {
+        return force.get();
+    }
+
+    public IntegerProperty charismeProperty() {
+        return charisme;
+    }
+
+    public IntegerProperty dexteriteProperty() {
+        return dexterite;
+    }
+
+    public IntegerProperty enduranceProperty() {
+        return endurance;
+    }
+
+    public IntegerProperty forceProperty() {
         return force;
     }
 
-    public int getMagie() {
+    public IntegerProperty hpProperty() {
+        return hp;
+    }
+
+    public IntegerProperty magieProperty() {
         return magie;
+    }
+
+    public int getMagie() {
+        return magie.get();
     }
 }

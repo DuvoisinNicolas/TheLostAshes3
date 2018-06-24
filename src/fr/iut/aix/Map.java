@@ -13,6 +13,16 @@ public class Map {
     private String map4;
     private Ennemi ennemi;
 
+    private static Map DEFAITE = new Map("Défaite","Défaite ! Vos HP ont atteint 0 ...","Rejouer");
+    private static Map VICTOIRE = new Map("Victoire","Victoire ! Vous avez réussi !","Rejouer");
+
+    //Defaite/victoire
+    private Map (String name , String text , String button1)
+    {
+        this.name = name;
+        this.text = text;
+        this.button1 = button1;
+    }
 
     //Maps normales
     public Map (String name , String text , String button1 , String map1)
@@ -123,29 +133,104 @@ public class Map {
 
 
     //Map à ennemi
-    public Map (String name , String text , String button1 , String map1, Ennemi ennemi)
+    public Map (String name , String text , String button1 , String map1 , Ennemi ennemi)
     {
-        oneButton(name, text, button1, map1);
+        this.name = name;
+        this.text = text;
+        this.button1 = button1;
         this.ennemi = ennemi;
+        if (combat(ennemi))
+            this.map1 = map1;
+        else this.map1 = "Défaite";
     }
 
-    public Map (String name , String text , String button1 , String map1, String button2, String map2, Ennemi ennemi)
+    //Test de stat
+    public Map (String name , String text , String button1 , String map1 , String map2 , Stat s)
     {
-        twoButtons(name, text, button1,map1, button2,map2);
-        this.ennemi = ennemi;
+        this.name = name;
+        this.text = text;
+        this.button1 = button1;
+
+        if (s.equals(Stat.HP) && Main.p.getHp() >= Math.random()*100)
+            this.map1 = map1;
+        else this.map1 = map2;
+
+        if (s.equals(Stat.FORCE) && Main.p.getForce() >= Math.random()*100)
+            this.map1 = map1;
+        else this.map1 = map2;
+
+        if (s.equals(Stat.DEXTERITE) && Main.p.getDexterite() >= Math.random()*100)
+            this.map1 = map1;
+        else this.map1 = map2;
+
+        if (s.equals(Stat.ENDURANCE) && Main.p.getEndurance() >= Math.random()*100)
+            this.map1 = map1;
+        else this.map1 = map2;
+
+        if (s.equals(Stat.MAGIE) && Main.p.getMagie() >= Math.random()*100)
+            this.map1 = map1;
+        else this.map1 = map2;
+
+        if (s.equals(Stat.CHARISME) && Main.p.getCharisme() >= Math.random()*100)
+            this.map1 = map1;
+        else this.map1 = map2;
+
     }
 
-    public Map (String name , String text , String button1 , String button2 , String button3, Ennemi ennemi)
+
+    private boolean combat (Ennemi ennemi)
     {
-        threeButtons(name, text, button1,map1, button2,map2, button3,map3);
-        this.ennemi = ennemi;
+        while (Main.p.getHp() > 0 && ennemi.getHp() > 0)
+        {
+            text = text + "L'ennemi possède " + ennemi.getHp() + " . \n";
+            int de = (int)(Math.random()*6);
+            int deEnnemi = (int)(Math.random()*6);
+            if (ennemi.getStatPrincipale().equals(Stat.FORCE))
+            {
+                int valAtk = Main.p.getForce() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(ennemi, de, deEnnemi, valAtk);
+            }
+            if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
+            {
+                int valAtk = Main.p.getDexterite() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(ennemi,de,deEnnemi,valAtk);
+
+            }
+            if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
+            {
+                int valAtk = Main.p.getEndurance() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(ennemi,de,deEnnemi,valAtk);
+            }
+            if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
+            {
+                int valAtk = Main.p.getMagie() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(ennemi,de,deEnnemi,valAtk);
+            }
+        }
+
+        return !(Main.p.getHp() < 0);
     }
 
-    public Map (String name , String text , String button1 , String map1, String button2, String map2 , String button3 , String map3, String button4, String map4, Ennemi ennemi)
-    {
-        fourButtons(name, text, button1,map1, button2,map2, button3,map3, button4,map4);
-        this.ennemi = ennemi;
+    private void calculerCombat(Ennemi ennemi, int de, int deEnnemi, int valAtk) {
+        int valAtkEnnemi = ennemi.getValStatPrincipale() + deEnnemi;
+        text = text + "Votre jet de dé est " + de + "et celui de l'ennemi est de" + deEnnemi + " .\n";
+        text = text + "Votre précision est donc de " + valAtk + " ,et celle de l'ennemi est de" + valAtkEnnemi + " . \n";
+        if (valAtk > valAtkEnnemi)
+        {
+            int degAtk = (int) (Math.random() * Main.p.getInventaire().getArme().getMaxDamage());
+            text = text + "C'est donc à vous d'attaquer ! Vous infligez " + degAtk + " points de dégats à l'ennemi. \n";
+            ennemi.setHp(ennemi.getHp()-degAtk);
+        }
+        else if (valAtk < valAtkEnnemi)
+        {
+            int degAtk = (int) (Math.random() * ennemi.getArme().getMaxDamage());
+            text = text + "C'est l'ennemi qui vous attaque ! Il vous inflige " + degAtk + "points de dégats . \n" +
+                    "Ces dégats sont réduits de " + Main.p.getInventaire().getArmure().getReducDegats() + " points grâce à votre " +
+                    Main.p.getInventaire().getArmure().getName() + " ! \n";
+            Main.p.setHp(Main.p.getHp()-(degAtk-Main.p.getInventaire().getArmure().getReducDegats()));
+        }
     }
+
     private void oneButton(String name, String text, String button1 , String map1) {
         this.name = name;
         this.text = text;
