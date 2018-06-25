@@ -18,4 +18,12 @@ public class Inventaire {
     public ArrayList<Objet> getObjets() {
         return objets;
     }
+
+    public void setArme(Arme arme) {
+        this.arme = arme;
+    }
+
+    public void setArmure(Armure armure) {
+        this.armure = armure;
+    }
 }

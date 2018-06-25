@@ -3,10 +3,13 @@ package fr.iut.aix;
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -221,36 +224,114 @@ public class Main extends Application {
     {
         root.getChildren().clear();
         GridPane armes = new GridPane();
+        armes.setAlignment(Pos.CENTER);
 
 
         Label choixArme = new Label("Choisissez votre arme !");
-        armes.add(choixArme,0,0,5,1);
+        armes.add(choixArme,0,0);
+        Label degatsBonus = new Label("Dé de dégats");
+        armes.add(degatsBonus,1,0);
+        Label bonusToucher = new Label("Bonus de toucher");
+        armes.add(bonusToucher,2,0);
+
 
         Label nomArme1 = new Label(Arme.ARMEDEBUT1.getName());
-        nomArme1.setAlignment(Pos.BASELINE_RIGHT);
         armes.add(nomArme1,0,1);
         Label nomArme2 = new Label(Arme.ARMEDEBUT2.getName());
-        nomArme2.setAlignment(Pos.BASELINE_RIGHT);
-        armes.add(nomArme1,0,1);
+        armes.add(nomArme2,0,2);
         Label nomArme3 = new Label(Arme.ARMEDEBUT3.getName());
-        nomArme3.setAlignment(Pos.BASELINE_RIGHT);
-        armes.add(nomArme1,0,1);
+        armes.add(nomArme3,0,3);
         Label nomArme4 = new Label(Arme.ARMEDEBUT4.getName());
-        nomArme4.setAlignment(Pos.BASELINE_RIGHT);
-        armes.add(nomArme1,0,1);
+        armes.add(nomArme4,0,4);
 
 
         Label statArme1 = new Label(""+Arme.ARMEDEBUT1.getMaxDamage());
+        armes.add(statArme1,1,1);
         Label statArme2 = new Label(""+Arme.ARMEDEBUT2.getMaxDamage());
+        armes.add(statArme2,1,2);
         Label statArme3 = new Label(""+Arme.ARMEDEBUT3.getMaxDamage());
+        armes.add(statArme3,1,3);
         Label statArme4 = new Label(""+Arme.ARMEDEBUT4.getMaxDamage());
+        armes.add(statArme4,1,4);
 
 
         Label bonusArme1 = new Label(""+Arme.ARMEDEBUT1.getBonusPrecision());
+        armes.add(bonusArme1,2,1);
         Label bonusArme2 = new Label(""+Arme.ARMEDEBUT2.getBonusPrecision());
+        armes.add(bonusArme2,2,2);
         Label bonusArme3 = new Label(""+Arme.ARMEDEBUT3.getBonusPrecision());
+        armes.add(bonusArme3,2,3);
         Label bonusArme4 = new Label(""+Arme.ARMEDEBUT4.getBonusPrecision());
+        armes.add(bonusArme4,2,4);
 
+
+        CheckBox armeBox1 = new CheckBox();
+        armes.add(armeBox1,3,1);
+        CheckBox armeBox2 = new CheckBox();
+        armes.add(armeBox2,3,2);
+        CheckBox armeBox3 = new CheckBox();
+        armes.add(armeBox3,3,3);
+        CheckBox armeBox4 = new CheckBox();
+        armes.add(armeBox4,3,4);
+
+        armeBox1.setOnAction(event -> {
+            armeBox2.setSelected(false);
+            armeBox3.setSelected(false);
+            armeBox4.setSelected(false);
+            p.getInventaire().setArme(Arme.ARMEDEBUT1);
+        });
+        armeBox2.setOnAction(event -> {
+            armeBox1.setSelected(false);
+            armeBox3.setSelected(false);
+            armeBox4.setSelected(false);
+            p.getInventaire().setArme(Arme.ARMEDEBUT2);
+        });
+        armeBox3.setOnAction(event -> {
+        armeBox1.setSelected(false);
+        armeBox2.setSelected(false);
+        armeBox4.setSelected(false);
+        p.getInventaire().setArme(Arme.ARMEDEBUT3);
+        });
+        armeBox4.setOnAction(event -> {
+        armeBox1.setSelected(false);
+        armeBox2.setSelected(false);
+        armeBox3.setSelected(false);
+        p.getInventaire().setArme(Arme.ARMEDEBUT4);
+        });
+
+        Button jouer = new Button("C'est parti !");
+        jouer.setAlignment(Pos.CENTER);
+        armes.add(jouer,0,5,6,1);
+
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(20);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(20);
+        col2.setHalignment(HPos.CENTER);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setPercentWidth(20);
+        col3.setHalignment(HPos.CENTER);
+        ColumnConstraints col4 = new ColumnConstraints();
+        col4.setPercentWidth(20);
+        col4.setHalignment(HPos.CENTER);
+        armes.getColumnConstraints().addAll(col1,col2,col3,col4);
+
+
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(10);
+        RowConstraints row2 = new RowConstraints();
+        row2.setPercentHeight(10);
+        RowConstraints row3 = new RowConstraints();
+        row3.setPercentHeight(10);
+        RowConstraints row4 = new RowConstraints();
+        row4.setPercentHeight(10);
+        RowConstraints row5 = new RowConstraints();
+        row5.setPercentHeight(10);
+        RowConstraints row6 = new RowConstraints();
+        row6.setPercentHeight(10);
+        RowConstraints row7 = new RowConstraints();
+        row7.setPercentHeight(10);
+        armes.getRowConstraints().addAll(row1,row2,row3,row4,row5,row6);
 
 
         root.setCenter(armes);
