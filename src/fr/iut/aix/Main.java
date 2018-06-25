@@ -18,13 +18,13 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     public static Personnage p = new Personnage("");
-    public static int MAXPTSALLOUER = 50;
+    public static int MAXPTSALLOUER = 25;
 
     public BorderPane root = new BorderPane();
     public Scene scene = new Scene(root);
 
     //Modifs dans les events
-    IntegerProperty nombreRestant = new SimpleIntegerProperty(5);
+    IntegerProperty nombreRestant = new SimpleIntegerProperty(MAXPTSALLOUER);
 
 
     public static void main(String[] args) {
@@ -79,7 +79,7 @@ public class Main extends Application {
         });
         plusForce.setOnAction(event -> {
 
-            if (nombreRestant.get() > 0)
+            if (nombreRestant.get() > 0 && p.getForce() < 10)
             {
                 p.setForce(p.getForce() + 1);
                 nombreRestant.set(nombreRestant.get()-1);
@@ -107,7 +107,7 @@ public class Main extends Application {
         });
         plusDexterite.setOnAction(event -> {
 
-            if (nombreRestant.get() > 0)
+            if (nombreRestant.get() > 0 && p.getDexterite() < 10)
             {
                 p.setDexterite(p.getDexterite() + 1);
                 nombreRestant.set(nombreRestant.get()-1);
@@ -134,7 +134,7 @@ public class Main extends Application {
         });
         plusEndurance.setOnAction(event -> {
 
-            if (nombreRestant.get() > 0)
+            if (nombreRestant.get() > 0 && p.getEndurance() < 10)
             {
                 p.setEndurance(p.getEndurance() + 1);
                 nombreRestant.set(nombreRestant.get()-1);
@@ -160,7 +160,7 @@ public class Main extends Application {
         });
         plusMagie.setOnAction(event -> {
 
-            if (nombreRestant.get() > 0)
+            if (nombreRestant.get() > 0 && p.getMagie() < 10)
             {
                 p.setMagie(p.getMagie() + 1);
                 nombreRestant.set(nombreRestant.get()-1);
@@ -184,7 +184,7 @@ public class Main extends Application {
             }
         });
         plusCharisme.setOnAction(event -> {
-            if (nombreRestant.get() > 0)
+            if (nombreRestant.get() > 0 && p.getCharisme() < 10)
             {
                 p.setCharisme(p.getCharisme() + 1);
                 nombreRestant.set(nombreRestant.get()-1);
@@ -234,11 +234,17 @@ public class Main extends Application {
 
         nomArme.getChildren().addAll(nomArme1,nomArme2,nomArme3,nomArme4);
 
-        Label statArme1 = new Label();
-        Label statArme2 = new Label();
-        Label statArme3 = new Label();
-        Label statArme4 = new Label();
-        Label statArme5 = new Label();
+        Label statArme1 = new Label(""+Arme.ARMEDEBUT1.getMaxDamage());
+        Label statArme2 = new Label(""+Arme.ARMEDEBUT2.getMaxDamage());
+        Label statArme3 = new Label(""+Arme.ARMEDEBUT3.getMaxDamage());
+        Label statArme4 = new Label(""+Arme.ARMEDEBUT4.getMaxDamage());
+
+        statArme.getChildren().addAll(statArme1,statArme2,statArme3,statArme4);
+
+        Label bonusArme1 = new Label(""+Arme.ARMEDEBUT1.getBonusPrecision());
+        Label bonusArme2 = new Label(""+Arme.ARMEDEBUT2.getBonusPrecision());
+        Label bonusArme3 = new Label(""+Arme.ARMEDEBUT3.getBonusPrecision());
+        Label bonusArme4 = new Label(""+Arme.ARMEDEBUT4.getBonusPrecision());
 
         armes.getChildren().addAll(nomArme,statArme,bonusArme);
 
