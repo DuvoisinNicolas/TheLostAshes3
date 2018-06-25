@@ -1,6 +1,5 @@
 package fr.iut.aix;
 
-import com.sun.org.apache.bcel.internal.generic.LADD;
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -20,13 +19,17 @@ import static java.lang.String.valueOf;
 
 public class Main extends Application {
     public static Personnage p = new Personnage("");
-    public static int MAXPTSALLOUER = 25;
+    public static int MAXPTSALLOUER = 0;
 
     public BorderPane root = new BorderPane();
     public Scene scene = new Scene(root);
 
     //Modifs dans les events
-    IntegerProperty nombreRestant = new SimpleIntegerProperty(MAXPTSALLOUER);
+    private IntegerProperty nombreRestant = new SimpleIntegerProperty(MAXPTSALLOUER);
+    private Map map1 = Map.ERREUR;
+    private Map map2 = Map.ERREUR;
+    private Map map3 = Map.ERREUR;
+    private Map map4 = Map.ERREUR;
 
 
     public static void main(String[] args) {
@@ -421,6 +424,24 @@ public class Main extends Application {
         Button choix4 = new Button(map.getButton4());
         mid.add(choix4,1,2);
 
+        //Test de l'objet
+        if (!map.getObjet().equals(Objet.ERREUR) && !map.getTypeInteractionObjet().equals(TypeInteractionObjet.ERREUR)) {
+            if (!map.getTypeInteractionObjet().equals(TypeInteractionObjet.NECESSAIRE))
+                verifierObjetNecessaire(map,map.getObjet(),map.getTypeInteractionObjet(),map.getNumeroBouton());
+            else ajouterRetirerObjet(map.getObjet(), map.getTypeInteractionObjet());
+        }
+
+        //Calcul des stats
+        if(!map.getStat().equals(Stat.ERREUR) && map.getValStat() != 0)
+            calculerStats(map.getStat(),map.getValStat());
+
+        //Calcul du combat
+        if(!map.getEnnemi().equals(Ennemi.ERREUR))
+        {
+            if (combat(map,map.getEnnemi()))
+                map.setMap1(map1.getName());
+            else map.setMap1("Défaite");
+        }
 
         if (choix1.getText().equals(""))
             choix1.setVisible(false);
@@ -431,6 +452,34 @@ public class Main extends Application {
         if (choix4.getText().equals(""))
             choix4.setVisible(false);
 
+
+        for (Map m : Map.tabMaps)
+        {
+            if (map.getMap1().equals(m.getName()))
+                map1 = m;
+            if (map.getMap2().equals(m.getName()))
+                map2 = m;
+            if (map.getMap3().equals(m.getName()))
+                map3 = m;
+            if (map.getMap4().equals(m.getName()))
+                map4 = m;
+        }
+
+        choix1.setOnAction(event -> {
+            interfaceJeu(map1);
+        });
+
+        choix2.setOnAction(event -> {
+            interfaceJeu(map2);
+        });
+
+        choix3.setOnAction(event -> {
+            interfaceJeu(map3);
+        });
+
+        choix4.setOnAction(event -> {
+            interfaceJeu(map4);
+        });
 
         root.setCenter(mid);
         root.setLeft(left);
@@ -561,4 +610,172 @@ public class Main extends Application {
         }
         return valueOf(charArray);
 }
+
+    private void ajouterRetirerObjet(Objet objet, TypeInteractionObjet typeInteractionObjet) {
+        if (typeInteractionObjet.equals(TypeInteractionObjet.PERDRE))
+        {
+            if (Main.p.getInventaire().getObjets().contains(objet))
+                Main.p.getInventaire().getObjets().remove(objet);
+        }
+        if (typeInteractionObjet.equals(TypeInteractionObjet.TROUVER))
+        {
+            Main.p.getInventaire().getObjets().add(objet);
+        }
+    }
+
+    private void verifierObjetNecessaire(Map map , Objet objet, TypeInteractionObjet typeInteractionObjet, int numeroBouton) {
+        if (typeInteractionObjet.equals(TypeInteractionObjet.NECESSAIRE))
+        {
+            if (!Main.p.getInventaire().getObjets().contains(objet))
+            {
+                switch (numeroBouton)
+                {
+                    case 1:
+                        map.setButton1("");
+                        break;
+                    case 2:
+                        map.setButton2("");
+                        break;
+                    case 3:
+                        map.setButton3("");
+                        break;
+                    case 4:
+                        map.setButton4("");
+                        break;}
+            }
+        }
+    }
+
+    private void calculerStats(Stat s, int valeur) {
+        if (s.equals(Stat.HP))
+            Main.p.setHp(Main.p.getHp()+valeur);
+        if (s.equals(Stat.FORCE))
+            Main.p.setForce(Main.p.getForce()+valeur);
+        if (s.equals(Stat.DEXTERITE))
+            Main.p.setHp(Main.p.getDexterite()+valeur);
+        if (s.equals(Stat.ENDURANCE))
+            Main.p.setHp(Main.p.getEndurance()+valeur);
+        if (s.equals(Stat.MAGIE))
+            Main.p.setHp(Main.p.getMagie()+valeur);
+        if (s.equals(Stat.CHARISME))
+            Main.p.setHp(Main.p.getCharisme()+valeur);
+
+        if (Main.p.getForce() > 10)
+            Main.p.setForce(10);
+        if (Main.p.getDexterite() > 10)
+            Main.p.setDexterite(10);
+        if (Main.p.getEndurance() > 10)
+            Main.p.setEndurance(10);
+        if (Main.p.getMagie() > 10)
+            Main.p.setMagie(10);
+        if (Main.p.getCharisme() > 10)
+            Main.p.setCharisme(10);
+
+        if (Main.p.getHp() < 0)
+            Main.p.setHp(0);
+        if (Main.p.getForce() < 0)
+            Main.p.setForce(0);
+        if (Main.p.getDexterite() < 0)
+            Main.p.setDexterite(0);
+        if (Main.p.getEndurance() < 0)
+            Main.p.setEndurance(0);
+        if (Main.p.getMagie() < 0)
+            Main.p.setMagie(0);
+        if (Main.p.getCharisme() < 0)
+            Main.p.setCharisme(0);
+
+    }
+
+    private boolean combat (Map map ,Ennemi ennemi)
+    {
+        map.setText(map.getText() + "L'ennemi possède " + ennemi.getHp() + " HP . \n\n");
+        if (ennemi.getStatPrincipale().equals(Stat.FORCE))
+            map.setText( map.getText() + "Il s'agit d'un combat de Force ! \n\n");
+        if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
+            map.setText( map.getText() + "Il s'agit d'un combat de Dextérité ! \n\n");
+        if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
+            map.setText( map.getText() + "Il s'agit d'un combat de Magie ! \n\n");
+        if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
+            map.setText(map.getText() + "Il s'agit d'un combat d'Endurance ! \n\n");
+
+
+        while (Main.p.getHp() > 0 && ennemi.getHp() > 0)
+        {
+            int de = (int)(Math.random()*5)+1;
+            int deEnnemi = (int)(Math.random()*5)+1;
+            if (ennemi.getStatPrincipale().equals(Stat.FORCE))
+            {
+                int valAtk = Main.p.getForce() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(map,ennemi, de, deEnnemi, valAtk);
+            }
+            if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
+            {
+                int valAtk = Main.p.getDexterite() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(map,ennemi,de,deEnnemi,valAtk);
+
+            }
+            if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
+            {
+                int valAtk = Main.p.getEndurance() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(map,ennemi,de,deEnnemi,valAtk);
+            }
+            if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
+            {
+                int valAtk = Main.p.getMagie() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                calculerCombat(map,ennemi,de,deEnnemi,valAtk);
+            }
+
+            map.setText(map.getText() + "Vous possèdez donc " + Main.p.getHp() + " HP. \n");
+            map.setText(map.getText() + "L'ennemi possède maintenant " + ennemi.getHp() + " HP . \n");
+
+            if (!(Main.p.getHp() > 0))
+            {
+                map.setText(map.getText() + "Vous avez perdu !!! Vos HP ont atteint 0 ...");
+            }
+            if (!(ennemi.getHp() > 0))
+            {
+                map.setText(map.getText() + "Vous avez eu raison de l'ennemi ! Bravo !");
+            }
+        }
+
+        return !(Main.p.getHp() < 0);
+    }
+
+    private void calculerCombat(Map map ,Ennemi ennemi, int de, int deEnnemi, int valAtk) {
+        int valAtkEnnemi = ennemi.getValStatPrincipale() + deEnnemi;
+        map.setText(map.getText() + "Votre jet de dé est " + de + " , et celui de l'ennemi est de " + deEnnemi + " .\n");
+        if (ennemi.getStatPrincipale().equals(Stat.FORCE))
+            map.setText(map.getText() + "On y ajoute votre valeur de Force à votre jet ( " + Main.p.getForce() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet ( " + ennemi.getValStatPrincipale() + " ).\n");
+        if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
+            map.setText(map.getText() + "On y ajoute votre valeur de Dextérité : ( " + Main.p.getDexterite() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n");
+        if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
+            map.setText(map.getText() + "On y ajoute votre valeur de Magie : ( " + Main.p.getMagie() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n");
+        if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
+            map.setText(map.getText() + "On y ajoute votre valeur d'Endurance : ( " + Main.p.getEndurance() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n");
+
+        if ( Main.p.getInventaire().getArme().getBonusPrecision() != 0)
+            map.setText(map.getText() + "Votre arme vous ajoute un modificateur de précision de " + Main.p.getInventaire().getArme().getBonusPrecision() + "\n");
+        map.setText(map.getText() + "Votre précision est donc de " + valAtk + ", et celle de l'ennemi est de " + valAtkEnnemi + ". \n");
+        if (valAtk > valAtkEnnemi)
+        {
+            int degAtk = (int) (Math.random() * Main.p.getInventaire().getArme().getMaxDamage());
+            map.setText(map.getText() + "C'est donc à vous d'attaquer ! Vous infligez " + degAtk + " points de dégats à l'ennemi. \n");
+            ennemi.setHp(ennemi.getHp()-degAtk);
+        }
+        else if (valAtk < valAtkEnnemi)
+        {
+            int degAtk = (int) (Math.random() * ennemi.getArme().getMaxDamage());
+            map.setText(map.getText() + "C'est l'ennemi qui vous attaque ! Il vous inflige " + degAtk + " points de dégats. \n");
+            if (!Main.p.getInventaire().getArmure().equals(Armure.ARMURERREUR)) {
+                map.setText(map.getText() + "Ces dégats sont réduits de " + Main.p.getInventaire().getArmure().getReducDegats() + " points grâce à votre " +
+                        Main.p.getInventaire().getArmure().getName() + " ! \n");
+            }
+            Main.p.setHp(Main.p.getHp()-(degAtk-Main.p.getInventaire().getArmure().getReducDegats()));
+        }
+    }
+
 }

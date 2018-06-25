@@ -8,6 +8,8 @@ public class Ennemi {
     private Stat statPrincipale;
     private int valStatPrincipale;
 
+    public static Ennemi ERREUR = new Ennemi("",0,Arme.ARMEERREUR,Stat.ERREUR,0);
+
     public Ennemi (String name, int hp ,Arme arme, Stat statPrincipale , int valStatPrincipale)
     {
         this.name = name;
