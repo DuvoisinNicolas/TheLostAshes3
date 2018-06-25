@@ -222,6 +222,25 @@ public class Main extends Application {
 
     public void interfaceChoixArmes()
     {
+        VBox armes = new VBox();
+        HBox nomArme = new HBox();
+        HBox statArme = new HBox();
+        HBox bonusArme = new HBox();
+
+        Label nomArme1 = new Label(Arme.ARMEDEBUT1.getName());
+        Label nomArme2 = new Label(Arme.ARMEDEBUT2.getName());
+        Label nomArme3 = new Label(Arme.ARMEDEBUT3.getName());
+        Label nomArme4 = new Label(Arme.ARMEDEBUT4.getName());
+
+        nomArme.getChildren().addAll(nomArme1,nomArme2,nomArme3,nomArme4);
+
+        Label statArme1 = new Label();
+        Label statArme2 = new Label();
+        Label statArme3 = new Label();
+        Label statArme4 = new Label();
+        Label statArme5 = new Label();
+
+        armes.getChildren().addAll(nomArme,statArme,bonusArme);
 
     }
 }
