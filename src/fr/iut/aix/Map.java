@@ -320,6 +320,17 @@ public class Map {
         if (s.equals(Stat.CHARISME))
             Main.p.setHp(Main.p.getCharisme()+valeur);
 
+        if (Main.p.getForce() > 10)
+            Main.p.setForce(10);
+        if (Main.p.getDexterite() > 10)
+            Main.p.setDexterite(10);
+        if (Main.p.getEndurance() > 10)
+            Main.p.setEndurance(10);
+        if (Main.p.getMagie() > 10)
+            Main.p.setMagie(10);
+        if (Main.p.getCharisme() > 10)
+            Main.p.setCharisme(10);
+
         if (Main.p.getHp() < 0)
             Main.p.setHp(0);
         if (Main.p.getForce() < 0)

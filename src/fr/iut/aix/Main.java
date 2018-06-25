@@ -9,10 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -222,31 +219,41 @@ public class Main extends Application {
 
     public void interfaceChoixArmes()
     {
-        VBox armes = new VBox();
-        HBox nomArme = new HBox();
-        HBox statArme = new HBox();
-        HBox bonusArme = new HBox();
+        root.getChildren().clear();
+        GridPane armes = new GridPane();
+
+
+        Label choixArme = new Label("Choisissez votre arme !");
+        armes.add(choixArme,0,0,5,1);
 
         Label nomArme1 = new Label(Arme.ARMEDEBUT1.getName());
+        nomArme1.setAlignment(Pos.BASELINE_RIGHT);
+        armes.add(nomArme1,0,1);
         Label nomArme2 = new Label(Arme.ARMEDEBUT2.getName());
+        nomArme2.setAlignment(Pos.BASELINE_RIGHT);
+        armes.add(nomArme1,0,1);
         Label nomArme3 = new Label(Arme.ARMEDEBUT3.getName());
+        nomArme3.setAlignment(Pos.BASELINE_RIGHT);
+        armes.add(nomArme1,0,1);
         Label nomArme4 = new Label(Arme.ARMEDEBUT4.getName());
+        nomArme4.setAlignment(Pos.BASELINE_RIGHT);
+        armes.add(nomArme1,0,1);
 
-        nomArme.getChildren().addAll(nomArme1,nomArme2,nomArme3,nomArme4);
 
         Label statArme1 = new Label(""+Arme.ARMEDEBUT1.getMaxDamage());
         Label statArme2 = new Label(""+Arme.ARMEDEBUT2.getMaxDamage());
         Label statArme3 = new Label(""+Arme.ARMEDEBUT3.getMaxDamage());
         Label statArme4 = new Label(""+Arme.ARMEDEBUT4.getMaxDamage());
 
-        statArme.getChildren().addAll(statArme1,statArme2,statArme3,statArme4);
 
         Label bonusArme1 = new Label(""+Arme.ARMEDEBUT1.getBonusPrecision());
         Label bonusArme2 = new Label(""+Arme.ARMEDEBUT2.getBonusPrecision());
         Label bonusArme3 = new Label(""+Arme.ARMEDEBUT3.getBonusPrecision());
         Label bonusArme4 = new Label(""+Arme.ARMEDEBUT4.getBonusPrecision());
 
-        armes.getChildren().addAll(nomArme,statArme,bonusArme);
+
+
+        root.setCenter(armes);
 
     }
 }

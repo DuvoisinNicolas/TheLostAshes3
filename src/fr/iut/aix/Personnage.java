@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class Personnage {
     private String name;
-    private IntegerProperty hp = new SimpleIntegerProperty(100);
+    private IntegerProperty hp = new SimpleIntegerProperty((int)(80 + Math.random()*40));
     private IntegerProperty force =  new SimpleIntegerProperty(0);
     private IntegerProperty dexterite =  new SimpleIntegerProperty(0);
     private IntegerProperty endurance =  new SimpleIntegerProperty(0);
