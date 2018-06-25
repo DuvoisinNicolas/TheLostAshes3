@@ -97,4 +97,8 @@ public class Personnage {
     public int getMagie() {
         return magie.get();
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

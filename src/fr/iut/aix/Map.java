@@ -13,8 +13,9 @@ public class Map {
     private String map4;
     private Ennemi ennemi;
 
-    private static Map DEFAITE = new Map("Défaite","Défaite ! Vos HP ont atteint 0 ...","Rejouer");
-    private static Map VICTOIRE = new Map("Victoire","Victoire ! Vous avez réussi !","Rejouer");
+    public static Map DEBUT = new Map("Bienvenue" ,"","Continuer" , "Rien" , new Ennemi("Gilbert" , 5 , Arme.ARMEDEBUT2,Stat.FORCE,10));
+    public static Map DEFAITE = new Map("Défaite","Défaite ! Vos HP ont atteint 0 ...","Rejouer");
+    public static Map VICTOIRE = new Map("Victoire","Victoire ! Vous avez réussi !","Rejouer");
 
     //Defaite/victoire
     private Map (String name , String text , String button1)
@@ -180,11 +181,21 @@ public class Map {
 
     private boolean combat (Ennemi ennemi)
     {
+        text = text + "L'ennemi possède " + ennemi.getHp() + " HP . \n\n";
+        if (ennemi.getStatPrincipale().equals(Stat.FORCE))
+        text = text + "Il s'agit d'un combat de Force ! \n\n";
+        if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
+            text = text + "Il s'agit d'un combat de Dextérité ! \n\n";
+        if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
+            text = text + "Il s'agit d'un combat de Magie ! \n\n";
+        if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
+            text = text + "Il s'agit d'un combat d'Endurance ! \n\n";
+
+
         while (Main.p.getHp() > 0 && ennemi.getHp() > 0)
         {
-            text = text + "L'ennemi possède " + ennemi.getHp() + " . \n";
-            int de = (int)(Math.random()*6);
-            int deEnnemi = (int)(Math.random()*6);
+            int de = (int)(Math.random()*5)+1;
+            int deEnnemi = (int)(Math.random()*5)+1;
             if (ennemi.getStatPrincipale().equals(Stat.FORCE))
             {
                 int valAtk = Main.p.getForce() + de + Main.p.getInventaire().getArme().getBonusPrecision();
@@ -206,6 +217,18 @@ public class Map {
                 int valAtk = Main.p.getMagie() + de + Main.p.getInventaire().getArme().getBonusPrecision();
                 calculerCombat(ennemi,de,deEnnemi,valAtk);
             }
+
+            text = text + "Vous possèdez donc " + Main.p.getHp() + " HP. \n";
+            text = text + "L'ennemi possède maintenant " + ennemi.getHp() + " HP . \n";
+
+            if (!(Main.p.getHp() > 0))
+            {
+                text = text + "Vous avez perdu !!! Vos HP ont atteint 0 ...";
+            }
+            if (!(ennemi.getHp() > 0))
+            {
+                text = text + "Vous avez eu raison de l'ennemi ! Bravo !";
+            }
         }
 
         return !(Main.p.getHp() < 0);
@@ -213,8 +236,23 @@ public class Map {
 
     private void calculerCombat(Ennemi ennemi, int de, int deEnnemi, int valAtk) {
         int valAtkEnnemi = ennemi.getValStatPrincipale() + deEnnemi;
-        text = text + "Votre jet de dé est " + de + "et celui de l'ennemi est de" + deEnnemi + " .\n";
-        text = text + "Votre précision est donc de " + valAtk + " ,et celle de l'ennemi est de" + valAtkEnnemi + " . \n";
+        text = text + "Votre jet de dé est " + de + " , et celui de l'ennemi est de " + deEnnemi + " .\n";
+        if (ennemi.getStatPrincipale().equals(Stat.FORCE))
+            text = text + "On y ajoute votre valeur de Force à votre jet ( " + Main.p.getForce() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet ( " + ennemi.getValStatPrincipale() + " ).\n";
+        if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
+            text = text + "On y ajoute votre valeur de Dextérité : ( " + Main.p.getDexterite() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n";
+        if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
+            text = text + "On y ajoute votre valeur de Magie : ( " + Main.p.getMagie() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n";
+        if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
+            text = text + "On y ajoute votre valeur d'Endurance : ( " + Main.p.getEndurance() + " ).\n"
+                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n";
+
+        if ( Main.p.getInventaire().getArme().getBonusPrecision() != 0)
+            text = text + "Votre arme vous ajoute un modificateur de précision de " + Main.p.getInventaire().getArme().getBonusPrecision() + "\n";
+        text = text + "Votre précision est donc de " + valAtk + ", et celle de l'ennemi est de " + valAtkEnnemi + ". \n";
         if (valAtk > valAtkEnnemi)
         {
             int degAtk = (int) (Math.random() * Main.p.getInventaire().getArme().getMaxDamage());
@@ -224,9 +262,11 @@ public class Map {
         else if (valAtk < valAtkEnnemi)
         {
             int degAtk = (int) (Math.random() * ennemi.getArme().getMaxDamage());
-            text = text + "C'est l'ennemi qui vous attaque ! Il vous inflige " + degAtk + "points de dégats . \n" +
-                    "Ces dégats sont réduits de " + Main.p.getInventaire().getArmure().getReducDegats() + " points grâce à votre " +
-                    Main.p.getInventaire().getArmure().getName() + " ! \n";
+            text = text + "C'est l'ennemi qui vous attaque ! Il vous inflige " + degAtk + " points de dégats. \n";
+            if (!Main.p.getInventaire().getArmure().equals(Armure.ARMURERREUR)) {
+                text = text + "Ces dégats sont réduits de " + Main.p.getInventaire().getArmure().getReducDegats() + " points grâce à votre " +
+                        Main.p.getInventaire().getArmure().getName() + " ! \n";
+            }
             Main.p.setHp(Main.p.getHp()-(degAtk-Main.p.getInventaire().getArmure().getReducDegats()));
         }
     }
@@ -344,5 +384,49 @@ public class Map {
         if (Main.p.getCharisme() < 0)
             Main.p.setCharisme(0);
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Ennemi getEnnemi() {
+        return ennemi;
+    }
+
+    public String getButton1() {
+        return button1;
+    }
+
+    public String getButton2() {
+        return button2;
+    }
+
+    public String getButton3() {
+        return button3;
+    }
+
+    public String getButton4() {
+        return button4;
+    }
+
+    public String getMap1() {
+        return map1;
+    }
+
+    public String getMap2() {
+        return map2;
+    }
+
+    public String getMap3() {
+        return map3;
+    }
+
+    public String getMap4() {
+        return map4;
+    }
+
+    public String getText() {
+        return text;
     }
 }
