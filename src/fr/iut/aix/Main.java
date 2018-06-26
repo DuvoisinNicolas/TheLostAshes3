@@ -378,6 +378,33 @@ public class Main extends Application {
     public void interfaceJeu (Map map)
     {
         root.getChildren().clear();
+
+        Button choix1;
+        Button choix2;
+        Button choix3;
+        Button choix4;
+        //Test de l'objet
+        if (!map.getObjet().equals(Objet.ERREUR) && !map.getTypeInteractionObjet().equals(TypeInteractionObjet.ERREUR)) {
+            if (!map.getTypeInteractionObjet().equals(TypeInteractionObjet.NECESSAIRE))
+                verifierObjetNecessaire(map,map.getObjet(),map.getTypeInteractionObjet(),map.getNumeroBouton());
+            else ajouterRetirerObjet(map.getObjet(), map.getTypeInteractionObjet());
+        }
+
+        //Calcul des stats
+        if(!map.getStat().equals(Stat.ERREUR) && map.getValStat() != 0)
+            calculerStats(map.getStat(),map.getValStat());
+
+        //Calcul du combat
+        if(!map.getEnnemi().equals(Ennemi.ERREUR))
+        {
+            if (combat(map,map.getEnnemi()))
+                map.setMap1(map1.getName());
+            else map.setMap1("Défaite");
+        }
+
+
+
+
         StackPane left = buildLeft();
         StackPane right = new StackPane();
         buildRight(right);
@@ -415,33 +442,14 @@ public class Main extends Application {
         sp.setContent(text);
 
         mid.add(sp,0,0,2,1);
-        Button choix1 = new Button(map.getButton1());
+        choix1 = new Button(map.getButton1());
         mid.add(choix1,0,1);
-        Button choix2 = new Button(map.getButton2());
+        choix2 = new Button(map.getButton2());
         mid.add(choix2,1,1);
-        Button choix3 = new Button(map.getButton3());
+        choix3 = new Button(map.getButton3());
         mid.add(choix3,0,2);
-        Button choix4 = new Button(map.getButton4());
+        choix4 = new Button(map.getButton4());
         mid.add(choix4,1,2);
-
-        //Test de l'objet
-        if (!map.getObjet().equals(Objet.ERREUR) && !map.getTypeInteractionObjet().equals(TypeInteractionObjet.ERREUR)) {
-            if (!map.getTypeInteractionObjet().equals(TypeInteractionObjet.NECESSAIRE))
-                verifierObjetNecessaire(map,map.getObjet(),map.getTypeInteractionObjet(),map.getNumeroBouton());
-            else ajouterRetirerObjet(map.getObjet(), map.getTypeInteractionObjet());
-        }
-
-        //Calcul des stats
-        if(!map.getStat().equals(Stat.ERREUR) && map.getValStat() != 0)
-            calculerStats(map.getStat(),map.getValStat());
-
-        //Calcul du combat
-        if(!map.getEnnemi().equals(Ennemi.ERREUR))
-        {
-            if (combat(map,map.getEnnemi()))
-                map.setMap1(map1.getName());
-            else map.setMap1("Défaite");
-        }
 
         if (choix1.getText().equals(""))
             choix1.setVisible(false);
