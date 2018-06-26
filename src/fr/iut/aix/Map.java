@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 public class Map {
     public static ArrayList<Map> tabMaps = new ArrayList<>();
-    public static Map ERREUR = new Map ("","","");
-    public static Map DEBUT = new Map("Bienvenue !","Aller au combat ?","Oui !","Combat",Stat.FORCE,10);
-    public static Map MAP1 = new Map("Combat" ,"","Continuer" , "Rien" , new Ennemi("Gilbert" , 5 , Arme.ARMEDEBUT2,Stat.FORCE,10));
+    public static Map ERREUR = new Map ("ERREUR","ERREUR","ERREUR");
+    public static Map DEBUT = new Map("Bienvenue","Vous gagnez 10 points de force !!!!  (C'est juste pour les tests hein ). Aller au combat ?","Oui !","Combat",Stat.FORCE,10);
+    public static Map MAP1 = new Map("Combat" ,"","Continuer" , "Objet" , new Ennemi("Gilbert" , 5 , Arme.ARMEDEBUT2,Stat.FORCE,2));
+    public static Map MAP2 = new Map ("Objet","Vous ramassez un objet incroyable ! Un slip sale !" ,"D'accord !","TestStat",Objet.SLIPSALE,TypeInteractionObjet.TROUVER);
+    public static Map MAP3 = new Map ("TestStat","Ici on teste ta stat. C'est un test de force , donc vu que tu en as 10 , tu devrais forcément réussir . Si tu vas vers la map \"Bienvenue\" , c'est buggé !","Ca marche alors !","TestObjet","Bienvenue",Stat.FORCE);
+    public static Map MAP4 = new Map("TestObjet","Ici on teste si tu as bien ramassé le slip sale . Tu devrais pouvoir aller dans les 2 boutons si tout va bien !","Retourner au début","Bienvenue","Continuer avec le slip","Victoire",Objet.SLIPSALE,TypeInteractionObjet.NECESSAIRE,2);
     public static Map DEFAITE = new Map("Défaite","Défaite ! Vos HP ont atteint 0 ...","Rejouer");
     public static Map VICTOIRE = new Map("Victoire","Victoire ! Vous avez réussi !","Rejouer");
 
@@ -170,31 +173,9 @@ public class Map {
         this.name = name;
         this.text = text;
         this.button1 = button1;
-
-        if (s.equals(Stat.HP) && Main.p.getHp() >= Math.random()*100)
-            this.map1 = map1;
-        else this.map1 = map2;
-
-        if (s.equals(Stat.FORCE) && Main.p.getForce() >= Math.random()*100)
-            this.map1 = map1;
-        else this.map1 = map2;
-
-        if (s.equals(Stat.DEXTERITE) && Main.p.getDexterite() >= Math.random()*100)
-            this.map1 = map1;
-        else this.map1 = map2;
-
-        if (s.equals(Stat.ENDURANCE) && Main.p.getEndurance() >= Math.random()*100)
-            this.map1 = map1;
-        else this.map1 = map2;
-
-        if (s.equals(Stat.MAGIE) && Main.p.getMagie() >= Math.random()*100)
-            this.map1 = map1;
-        else this.map1 = map2;
-
-        if (s.equals(Stat.CHARISME) && Main.p.getCharisme() >= Math.random()*100)
-            this.map1 = map1;
-        else this.map1 = map2;
-
+        this.stat = s;
+        this.map1 = map1;
+        this.map2 = map2;
     }
 
 
