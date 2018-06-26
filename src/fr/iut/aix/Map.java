@@ -5,13 +5,14 @@ import java.util.ArrayList;
 public class Map {
     public static ArrayList<Map> tabMaps = new ArrayList<>();
     public static Map ERREUR = new Map ("ERREUR","ERREUR","ERREUR");
-    public static Map DEBUT = new Map("Bienvenue","Vous gagnez 10 points de force !!!!  (C'est juste pour les tests hein ). Aller au combat ?","Oui !","Combat",Stat.FORCE,10);
-    public static Map MAP1 = new Map("Combat" ,"","Continuer" , "Objet" , new Ennemi("Gilbert" , 5 , Arme.ARMEDEBUT2,Stat.FORCE,2));
+    public static Map DEBUT = new Map("Bienvenue (Checkpoint)","Vous gagnez 10 points d'endurance !!!!  (C'est juste pour les tests hein). Aller au combat ?","Oui !","Combat",Stat.ENDURANCE,10);
+    public static Map MAP1 = new Map("Combat" ,"","Continuer" , "Objet" , new Ennemi("Gilbert" , 5 , Arme.ARMEDEBUT2,Stat.ENDURANCE,2));
     public static Map MAP2 = new Map ("Objet","Vous ramassez un objet incroyable ! Un slip sale !" ,"D'accord !","TestStat",Objet.SLIPSALE,TypeInteractionObjet.TROUVER);
-    public static Map MAP3 = new Map ("TestStat","Ici on teste ta stat. C'est un test de force , donc vu que tu en as 10 , tu devrais forcément réussir . Si tu vas vers la map \"Bienvenue\" , c'est buggé !","Ca marche alors !","TestObjet","Bienvenue",Stat.FORCE);
-    public static Map MAP4 = new Map("TestObjet","Ici on teste si tu as bien ramassé le slip sale . Tu devrais pouvoir aller dans les 2 boutons si tout va bien !","Retourner au début","Bienvenue","Continuer avec le slip","Victoire",Objet.SLIPSALE,TypeInteractionObjet.NECESSAIRE,2);
-    public static Map DEFAITE = new Map("Défaite","Défaite ! Vos HP ont atteint 0 ...","Rejouer");
-    public static Map VICTOIRE = new Map("Victoire","Victoire ! Vous avez réussi !","Rejouer");
+    public static Map MAP3 = new Map ("TestStat","Ici on teste ta stat. C'est un test de force , donc vu que tu en as 10 , tu devrais forcément réussir . Si tu vas vers la map \"Bienvenue\" , c'est buggé !","Ca marche alors !","TestObjet","Bienvenue (Checkpoint)",Stat.ENDURANCE);
+    public static Map MAP4 = new Map("TestObjet","Ici on teste si tu as bien ramassé le slip sale . Tu devrais pouvoir aller dans les 2 boutons si tout va bien !","Retourner au début","Bienvenue","Continuer avec le slip et mourrir","Mort",Objet.SLIPSALE,TypeInteractionObjet.NECESSAIRE,2);
+    public static Map MAP5 = new Map("Mort","","RIP !","Victoire",new Ennemi("Dieu",500,new Arme("LA MORT",1000,500),Stat.FORCE,1000));
+    public static Map DEFAITE = new Map("Défaite","Défaite ! Vos HP ont atteint 0 ...","Charger le point de sauvegarde","","Rejouer","");
+    public static Map VICTOIRE = new Map("Victoire","Victoire ! Vous avez réussi !","Rejouer","");
 
 
     private String name;
@@ -30,6 +31,7 @@ public class Map {
     private Stat stat = Stat.ERREUR;
     private int valStat = 0;
     private int numeroBouton = 0;
+    private boolean checkpoint = false;
 
     //Defaite/victoire
     private Map (String name , String text , String button1)
@@ -179,7 +181,11 @@ public class Map {
     }
 
 
-
+    private void checkCheckpoint ()
+    {
+        if (this.name.contains("(Checkpoint)"))
+            this.checkpoint = true;
+    }
 
 
     private void oneButton(String name, String text, String button1 , String map1) {
@@ -324,5 +330,12 @@ public class Map {
 
     public void setMap4(String map4) {
         this.map4 = map4;
+    }
+
+    public boolean isCheckpoint() {
+        if (this.name.contains("(Checkpoint)"))
+            return true;
+        else
+            return false;
     }
 }

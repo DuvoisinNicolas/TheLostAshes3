@@ -19,10 +19,15 @@ import static java.lang.String.valueOf;
 
 public class Main extends Application {
     public static Personnage p = new Personnage("");
-    public static int MAXPTSALLOUER = 0;
+    public static int VALEURPOINTSALLOUER = 5;
+    public static int MAXPTSALLOUER = VALEURPOINTSALLOUER;
 
     public BorderPane root = new BorderPane();
     public Scene scene = new Scene(root);
+
+    public Map checkpoint = Map.DEBUT;
+    public int hpCheckpoint;
+    public Personnage personnageCheckpoint;
 
     //Modifs dans les events
     private IntegerProperty nombreRestant = new SimpleIntegerProperty(MAXPTSALLOUER);
@@ -52,6 +57,7 @@ public class Main extends Application {
     public void interfaceCreationPerso()
     {
 
+        root.getChildren().clear();
         VBox center = new VBox();
         center.setSpacing(5);
         center.setAlignment(Pos.CENTER);
@@ -379,6 +385,7 @@ public class Main extends Application {
     {
         root.getChildren().clear();
 
+
         StackPane left = buildLeft();
         StackPane right = new StackPane();
         buildRight(right);
@@ -514,6 +521,28 @@ public class Main extends Application {
             System.out.println(map4.getName());
             interfaceJeu(map4);
         });
+
+        if (map.isCheckpoint())
+        {
+            this.checkpoint = map;
+            this.hpCheckpoint = p.getHp();
+            this.personnageCheckpoint = p;
+        }
+
+        if (map.getName().equals("Défaite"))
+        {
+            choix1.setOnAction(event -> {
+                p = personnageCheckpoint;
+                p.setHp(hpCheckpoint);
+                interfaceJeu(checkpoint);
+            });
+            choix2.setOnAction(event -> {
+                p = Personnage.PERSONNAGEDEPART;
+                MAXPTSALLOUER = VALEURPOINTSALLOUER;
+                nombreRestant.set(MAXPTSALLOUER);
+                interfaceCreationPerso();
+            });
+        }
 
         root.setCenter(mid);
         root.setLeft(left);
@@ -686,13 +715,13 @@ public class Main extends Application {
         if (s.equals(Stat.FORCE))
             Main.p.setForce(Main.p.getForce()+valeur);
         if (s.equals(Stat.DEXTERITE))
-            Main.p.setHp(Main.p.getDexterite()+valeur);
+            Main.p.setDexterite(Main.p.getDexterite()+valeur);
         if (s.equals(Stat.ENDURANCE))
-            Main.p.setHp(Main.p.getEndurance()+valeur);
+            Main.p.setEndurance(Main.p.getEndurance()+valeur);
         if (s.equals(Stat.MAGIE))
-            Main.p.setHp(Main.p.getMagie()+valeur);
+            Main.p.setMagie(Main.p.getMagie()+valeur);
         if (s.equals(Stat.CHARISME))
-            Main.p.setHp(Main.p.getCharisme()+valeur);
+            Main.p.setCharisme(Main.p.getCharisme()+valeur);
 
         if (Main.p.getForce() > 10)
             Main.p.setForce(10);

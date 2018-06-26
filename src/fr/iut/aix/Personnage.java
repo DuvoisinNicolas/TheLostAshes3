@@ -13,6 +13,8 @@ public class Personnage {
     private IntegerProperty charisme = new SimpleIntegerProperty( 0);
     private Inventaire inventaire = new Inventaire();
 
+    public static Personnage PERSONNAGEDEPART = new Personnage("");
+
     public Personnage(String name)
     {
         this.name = name;
