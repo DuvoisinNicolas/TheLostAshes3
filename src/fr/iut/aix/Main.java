@@ -649,8 +649,7 @@ public class Main extends Application {
         return left;
     }
 
-    public static String setText (String texte)
-    {
+    public static String setText (String texte) {
     char[] charArray= texte.toCharArray();
     int charCpt=0;
         for (int i=0 ; i < charArray.length ; ++i)
@@ -749,42 +748,43 @@ public class Main extends Application {
 
     }
 
-    private boolean combat (Map map ,Ennemi ennemi)
-    {
-        map.setText(map.getText() + "L'ennemi possède " + ennemi.getHp() + " HP . \n\n");
+    private boolean combat (Map map ,Ennemi ennemi) {
+        map.setText(map.getText() + ennemi.getName() + " possède " + ennemi.getHp() + " HP ");
         if (ennemi.getStatPrincipale().equals(Stat.FORCE))
-            map.setText( map.getText() + "Il s'agit d'un combat de Force ! \n\n");
+            map.setText( map.getText() + "et possède " + ennemi.getValStatPrincipale() + " points de Force \n\n");
         if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
-            map.setText( map.getText() + "Il s'agit d'un combat de Dextérité ! \n\n");
+            map.setText( map.getText() + "et possède " + ennemi.getValStatPrincipale() + " points de Dextérité \n\n");
         if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
-            map.setText( map.getText() + "Il s'agit d'un combat de Magie ! \n\n");
+            map.setText( map.getText() + "et possède " + ennemi.getValStatPrincipale() + " points de Magie \n\n");
         if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
-            map.setText(map.getText() + "Il s'agit d'un combat d'Endurance ! \n\n");
+            map.setText(map.getText() + "et possède " + ennemi.getValStatPrincipale() + " points d'Endurance \n\n");
 
 
+        int tour = 1;
         while (Main.p.getHp() > 0 && ennemi.getHp() > 0)
         {
+            map.setText(map.getText() + "<<< Tour " + tour++ + " >>>\n\n");
             int de = (int)(Math.random()*5)+1;
             int deEnnemi = (int)(Math.random()*5)+1;
             if (ennemi.getStatPrincipale().equals(Stat.FORCE))
             {
-                int valAtk = Main.p.getForce() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                int valAtk = de + Main.p.getInventaire().getArme().getBonusPrecision();
                 calculerCombat(map,ennemi, de, deEnnemi, valAtk);
             }
             if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
             {
-                int valAtk = Main.p.getDexterite() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                int valAtk = de + Main.p.getInventaire().getArme().getBonusPrecision();
                 calculerCombat(map,ennemi,de,deEnnemi,valAtk);
 
             }
             if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
             {
-                int valAtk = Main.p.getEndurance() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                int valAtk = de + Main.p.getInventaire().getArme().getBonusPrecision();
                 calculerCombat(map,ennemi,de,deEnnemi,valAtk);
             }
             if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
             {
-                int valAtk = Main.p.getMagie() + de + Main.p.getInventaire().getArme().getBonusPrecision();
+                int valAtk = de + Main.p.getInventaire().getArme().getBonusPrecision();
                 calculerCombat(map,ennemi,de,deEnnemi,valAtk);
             }
 
@@ -805,24 +805,21 @@ public class Main extends Application {
     }
 
     private void calculerCombat(Map map ,Ennemi ennemi, int de, int deEnnemi, int valAtk) {
-        int valAtkEnnemi = ennemi.getValStatPrincipale() + deEnnemi;
-        map.setText(map.getText() + "Votre jet de dé est " + de + " , et celui de l'ennemi est de " + deEnnemi + " .\n");
+        int valAtkEnnemi = deEnnemi + ennemi.getArme().getBonusPrecision();
+        map.setText(map.getText() + "Votre jet : " + de + "\nJet de l'ennemi : " + deEnnemi + "\n");
         if (ennemi.getStatPrincipale().equals(Stat.FORCE))
-            map.setText(map.getText() + "On y ajoute votre valeur de Force à votre jet ( " + Main.p.getForce() + " ).\n"
-                    + "L'ennemi ajoute également sa valeur à son jet ( " + ennemi.getValStatPrincipale() + " ).\n");
+            map.setText(map.getText() + "Précision : " + Main.p.getInventaire().getArme().getBonusPrecision() + " + " + de + " = " + valAtk + "\n"
+                    + "Précision de l'ennemi : " + ennemi.getArme().getBonusPrecision() + " + " + deEnnemi + " = " + valAtkEnnemi +  " \n");
         if (ennemi.getStatPrincipale().equals(Stat.DEXTERITE))
-            map.setText(map.getText() + "On y ajoute votre valeur de Dextérité : ( " + Main.p.getDexterite() + " ).\n"
-                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n");
+            map.setText(map.getText() + "Précision : " + Main.p.getInventaire().getArme().getBonusPrecision() + " + " + de + " = " + valAtk + "\n"
+                    + "Précision de l'ennemi : " + ennemi.getArme().getBonusPrecision() + " + " + deEnnemi + " = " + valAtkEnnemi +  " \n");
         if (ennemi.getStatPrincipale().equals(Stat.MAGIE))
-            map.setText(map.getText() + "On y ajoute votre valeur de Magie : ( " + Main.p.getMagie() + " ).\n"
-                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n");
+            map.setText(map.getText() + "Précision : " + Main.p.getInventaire().getArme().getBonusPrecision() + " + " + de + " = " + valAtk + "\n"
+                    + "Précision de l'ennemi : " + ennemi.getArme().getBonusPrecision() + " + " + deEnnemi + " = " + valAtkEnnemi +  " \n");
         if (ennemi.getStatPrincipale().equals(Stat.ENDURANCE))
-            map.setText(map.getText() + "On y ajoute votre valeur d'Endurance : ( " + Main.p.getEndurance() + " ).\n"
-                    + "L'ennemi ajoute également sa valeur à son jet  ( " + ennemi.getValStatPrincipale() + " ).\n");
+            map.setText(map.getText() + "Précision : " + Main.p.getInventaire().getArme().getBonusPrecision() + " + " + de + " = " + valAtk + "\n"
+                    + "Précision de l'ennemi : " + ennemi.getArme().getBonusPrecision() + " + " + deEnnemi + " = " + valAtkEnnemi +  " \n");
 
-        if ( Main.p.getInventaire().getArme().getBonusPrecision() != 0)
-            map.setText(map.getText() + "Votre arme vous ajoute un modificateur de précision de " + Main.p.getInventaire().getArme().getBonusPrecision() + "\n");
-        map.setText(map.getText() + "Votre précision est donc de " + valAtk + ", et celle de l'ennemi est de " + valAtkEnnemi + ". \n");
         if (valAtk > valAtkEnnemi)
         {
             int degAtk = (int) (Math.random() * (Main.p.getInventaire().getArme().getMaxDamage()-1)+1);
